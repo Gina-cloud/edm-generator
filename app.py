@@ -152,7 +152,6 @@ def initialize_openai_client():
                 messages=[{"role": "user", "content": "Hello"}],
                 max_tokens=5
             )
-
             return client
             
         except Exception as e:
@@ -3224,11 +3223,9 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # 디버그 모드 기본값 설정 (사용자에게 노출되지 않음)
-    st.session_state.debug_mode = False
+
     
-    # 진행 상황 표시
-    # 진행상황 바 제거됨
+
     
     # 2열 레이아웃
     col1, col2 = st.columns([1, 1])
@@ -3237,7 +3234,7 @@ def main():
         st.markdown('<div class="section-header"><h2>📝 콘텐츠 입력</h2></div>', unsafe_allow_html=True)
         
         # 1. EDM 기본 설정 (순서 변경: 1번으로)
-        with st.expander("⚙️ 1단계: 기본 설정", expanded=True):
+        with st.expander("⚙️ 1단계: EDM 기본 설정", expanded=True):
             
             edm_type = st.radio("EDM 유형", ["초청형", "소개형"], help="초청형: 행사/세미나 초대, 소개형: 제품/서비스 소개")
             
@@ -3248,8 +3245,7 @@ def main():
             title_suggestion = st.text_input("타이틀 제안 (선택)", 
                                             placeholder="AI가 25자 이내로 최적화합니다")
             
-            target = st.text_input("타겟 고객",
-                                            placeholder="예: IT관리자, CTO, 제조업 담당자")
+            target = st.text_input("타겟 고객", "예: IT 관리자, CTO, 제조업 담당자")
             
             if core:
                 # current_step 업데이트 최적화 (블러 현상 방지)
@@ -3257,11 +3253,11 @@ def main():
                     st.session_state.current_step = 2
         
         # 2. 솔루션 소개 자료 (순서 변경: 2번으로, URL/파일 동시 업로드 지원)
-        with st.expander("📄 2단계: 솔루션 AI분석", expanded=True):
+        with st.expander("📄 2단계: 솔루션 소개 자료 (개선됨)", expanded=True):
             
             # URL 입력
             st.markdown("**🌐 웹페이지 URL**")
-            url_input = st.text_input("웹페이지 URL", placeholder="https://www.woongjin.com")
+            url_input = st.text_input("웹페이지 URL", placeholder="https://example.com")
             url_summary = ""
             if url_input and st.button("🔍 URL 분석", key="analyze_url"):
                 with st.spinner("웹페이지 내용을 분석 중..."):
@@ -3375,7 +3371,7 @@ def main():
                 
                 col_url, col_cta = st.columns(2)
                 with col_url:
-                    event_url = st.text_input("신청 링크", placeholder="https://www.woongjin.com/customer/contact.do")
+                    event_url = st.text_input("신청 링크", placeholder="https://...")
                 with col_cta:
                     cta = st.text_input("버튼 문구", "신청하기")
                 
@@ -3388,7 +3384,7 @@ def main():
                         st.session_state.current_step = 4
         
         else:  # 소개형 - 순서 개선: 제품/서비스 설명 > 주요 기능 > 기대효과
-            with st.expander("🛠️ 3단계: 솔루션 소개 ", expanded=True):
+            with st.expander("🛠️ 3단계: 솔루션 소개 (순서 개선)", expanded=True):
                 
                 # 4-1. 제품/서비스 설명
                 st.markdown("**📋 제품/서비스 설명**")
@@ -3508,7 +3504,7 @@ def main():
                 # 4-3. 기대효과 (주요 기능 다음)
                 st.markdown("**📈 기대효과 (AI 향상 + 주요 기능 다음 배치)**")
                 expected_effects = st.text_area("기대효과 설명", 
-                                              placeholder="예:\n재고 관리 효율화\n운영비용 절감\n실시간 모니터링 가능",
+                                              placeholder="예: 재고 관리 효율화\n운영비용 절감\n실시간 모니터링 가능",
                                               help="AI가 참고자료를 바탕으로 구체적인 설명을 추가합니다.")
                 
                 # 안전한 valid_features 필터링
@@ -3519,7 +3515,7 @@ def main():
                 
                 col_url, col_cta = st.columns(2)
                 with col_url:
-                    product_url = st.text_input("상세 URL", placeholder="https://www.woongjin.com/customer/contact.do")
+                    product_url = st.text_input("상세 URL", placeholder="https://...")
                 with col_cta:
                     cta = st.text_input("버튼 문구", "문의하기")
                 
@@ -3590,7 +3586,7 @@ def main():
                 st.session_state.current_step = 5
         
         # 5. 로고 설정 (URL 기반)
-        with st.expander("🏷️ 5단계: 로고(CI/BI) 설정", expanded=True):
+        with st.expander("🏷️ 5단계: 로고 설정", expanded=True):
             
             # 기본 웅진IT 로고 URL 설정
             company_logo_light_url = "https://raw.githubusercontent.com/Gina-cloud/edm-generator/main/woongjinit_logo1.png"  # 어두운 배경용 (밝은 로고)
@@ -3654,7 +3650,7 @@ def main():
                 st.session_state.current_step = 6
         
         # 6. Footer 설정 (새로 추가: 6번으로)
-        with st.expander("📄 6단계: Footer 설정 ", expanded=True):
+        with st.expander("📄 6단계: Footer 설정 (새로 추가)", expanded=True):
             
             use_custom_footer = st.checkbox("커스텀 Footer 사용", help="체크하면 아래 정보를 사용하고, 체크하지 않으면 기본값을 사용합니다.")
             
@@ -3663,7 +3659,7 @@ def main():
                 with col_name:
                     footer_company_name = st.text_input("회사명", value="㈜웅진", placeholder="회사명을 입력하세요")
                 with col_contact:
-                    footer_contact = st.text_input("연락처", value="02-2076-4931", placeholder="전화번호를 입력하세요")
+                    footer_contact = st.text_input("연락처", value="02-2250-1000", placeholder="전화번호를 입력하세요")
                 
                 footer_address = st.text_input("주소", 
                                              value="서울특별시 중구 청계천로24 케이스퀘어시티 7층",
@@ -3710,7 +3706,7 @@ def main():
                     <div>
                         <h3 style="margin: 0; font-size: 1.2em;">🚀 AI가 EDM을 생성하고 있습니다</h3>
                         <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9em;">
-                            개발자 없는 Camper, AI와 함께하다. 기다림 끝에 작품을 만나세요.
+                            고품질 EDM을 위해 AI가 열심히 작업 중입니다. 잠시만 기다려주세요.
                         </p>
                     </div>
                 </div>
@@ -3752,7 +3748,7 @@ def main():
                         st.session_state.translated_html = translated_html
                         st.session_state.translated_language = translate_language
                         st.session_state.show_multilang_preview = True
-                        st.success(f"✅ {translate_language} 번역이 완료되었습니다!")
+
                         st.rerun()
                         
                     except Exception as e:
@@ -3762,7 +3758,7 @@ def main():
             st.markdown("#### ⚙️ AI 수정 요청")
             korean_edit_request = st.text_area(
                 "한국어 EDM 수정 요청",
-                placeholder="예시:\n• 제목을 더 임팩트 있게 바꿔주세요\n• 본문을 더 간결하게 만들어주세요",
+                placeholder="예시:\n• 제목을 더 임팩트 있게 바꿔주세요\n• 본문을 더 간결하게 만들어주세요\n• CTA 버튼 텍스트를 더 매력적으로 수정해주세요",
                 height=100,
                 key="korean_edit_request"
             )
@@ -3798,7 +3794,7 @@ def main():
                             st.session_state.html_content = edited_html
                             st.session_state.original_content = edited_content
                             
-                            st.success("한국어 EDM AI 수정이 완료되었습니다!")
+
                             st.rerun()
                             
                     except Exception as e:
@@ -3871,7 +3867,7 @@ def main():
                             # 번역된 수정 내용으로 업데이트
                             st.session_state.translated_html = translated_edited_html
                             
-                            st.success(f"다국어 EDM AI 수정이 완료되었습니다! ({st.session_state.get('translated_language', 'Unknown')})")
+
                             st.rerun()
                             
                     except Exception as e:
@@ -3925,15 +3921,7 @@ def main():
                     'cta': cta
                 }
                 
-                # 디버깅: 초청형 EDM 변수 확인
-                if edm_type == "초청형":
-                    print(f"🔍 초청형 EDM 디버깅:")
-                    print(f"  - invitation_text: {invitation_text}")
-                    print(f"  - event_date: {event_date}")
-                    print(f"  - event_location: {event_location}")
-                    print(f"  - sessions 개수: {len(sessions)}")
-                    print(f"  - info: {info}")
-                    print(f"  - cta_url: {cta_url}")
+
                 
                 # 자료 요약 가져오기 (URL + 파일 종합)
                 material_summary = st.session_state.get('material_summary', '')
@@ -4027,8 +4015,7 @@ def main():
                 # EDM 생성 완료 - 로딩 스피너 제거
                 st.session_state.edm_generating = False
                 
-                st.success("✅ EDM 생성이 완료되었습니다!")
-                st.info("👉 우측 미리보기 창에서 생성된 EDM을 확인하고 추가 편집을 진행하세요.")
+
                 
                 # 페이지 새로고침으로 우측 미리보기 업데이트
                 st.rerun()
