@@ -3603,9 +3603,19 @@ def main():
             st.markdown("**로고 미리보기:**")
             cols = st.columns(2)
             with cols[0]:
-                st.image(company_logo_light_url, caption="밝은 로고 (어두운 배경용)", width=120)
+                st.markdown("""
+                <div style="background-color: #2c3e50; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 10px;">
+                    <img src="{}" width="120" style="max-width: 100%; height: auto;">
+                    <p style="color: white; margin-top: 10px; font-size: 12px;">밝은 로고 (어두운 배경용)</p>
+                </div>
+                """.format(company_logo_light_url), unsafe_allow_html=True)
             with cols[1]:
-                st.image(company_logo_dark_url, caption="어두운 로고 (밝은 배경용)", width=120)
+                st.markdown("""
+                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 10px; border: 1px solid #dee2e6;">
+                    <img src="{}" width="120" style="max-width: 100%; height: auto;">
+                    <p style="color: #333; margin-top: 10px; font-size: 12px;">어두운 로고 (밝은 배경용)</p>
+                </div>
+                """.format(company_logo_dark_url), unsafe_allow_html=True)
             
             # 솔루션 로고 (선택사항)
             partner_logo = st.file_uploader("솔루션 로고 (선택)", type=["png", "jpg", "jpeg"])
@@ -3671,7 +3681,7 @@ def main():
                 
                 footer_website = st.text_input("웹사이트", 
                                              value="www.woongjin.com",
-                                             placeholder="웹사이트 주소를 입력하세요 (http:// 제외)")
+                                             placeholder="웹사이트 주소를 입력하세요")
                 
                 footer_info = {
                     'company_name': footer_company_name,
