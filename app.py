@@ -3385,16 +3385,16 @@ def main():
                     if st.session_state.current_step < 4:
                         st.session_state.current_step = 4
         
-        else:  # 소개형 - 순서 개선: 제품/서비스 설명 > 주요 기능 > 기대효과
+        else:  # 소개형 - 순서 개선: 솔루션/서비스 설명 > 주요 기능 > 기대효과
             with st.expander("## **🛠️ 3단계: 솔루션 소개**", expanded=True):
                 
-                # 4-1. 제품/서비스 설명
-                st.markdown("**📋 제품/서비스 설명**")
-                desc = st.text_area("제품/서비스 설명", 
-                                  placeholder="제품의 주요 특징과 장점을 설명해주세요")
+                # 4-1. 솔루션/서비스 설명
+                st.markdown("**📋 솔루션/서비스 설명**")
+                desc = st.text_area("솔루션/서비스 설명 (필수)", 
+                                  placeholder="솔루션/서비스의 주요 특징과 장점을 설명해주세요")
                 
                 # 4-2. 주요 기능
-                st.markdown("**🔧 주요 기능 (Bootstrap Icons + AI 설명 향상)**")
+                st.markdown("**🔧 주요 기능 (아이콘 생성 및 AI 설명)**")
                 
                 layout_option = st.selectbox("기능 레이아웃", ["1xN (세로)", "2xN (2열)", "3xN (3열)", "자동"])
                 
@@ -3418,14 +3418,14 @@ def main():
                 # 기능 추가/제거 버튼
                 col_add, col_remove = st.columns(2)
                 with col_add:
-                    if st.button("➕ 기능 추가", key="add_feature"):
+                    if st.button("➕ 추가", key="add_feature"):
                         if st.session_state.num_features < 10:
                             st.session_state.features_data.append({'icon_keyword': '', 'feature_name': '', 'feature_desc': ''})
                             st.session_state.num_features += 1
                             # st.rerun() 제거 - 자동 업데이트
                 
                 with col_remove:
-                    if st.button("➖ 기능 제거", key="remove_feature"):
+                    if st.button("➖ 삭제", key="remove_feature"):
                         if st.session_state.num_features > 1:
                             st.session_state.features_data.pop()
                             st.session_state.num_features -= 1
@@ -3908,7 +3908,7 @@ def main():
                 st.stop()
         elif edm_type == "소개형":
             if not desc.strip():
-                st.error("❌ 제품/서비스 설명을 입력해주세요.")
+                st.error("❌ 솔루션/서비스 설명을 입력해주세요.")
                 st.stop()
         
         # 버튼 클릭 즉시 생성 진행 상황 플래그 설정
