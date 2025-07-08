@@ -3538,7 +3538,7 @@ def main():
         # 4. 디자인 설정 (순서 변경: 4번으로)
         with st.expander("🎨 4단계: 디자인 설정", expanded=True):
             
-            bg_main_color = st.color_picker("메인 컬러", "#8EC5FC")
+            bg_main_color = st.color_picker("메인 컬러", "#354F9B")
             
             st.markdown("**배경 효과**")
             cols = st.columns(5)
