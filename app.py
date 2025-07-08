@@ -3237,7 +3237,7 @@ def main():
         st.markdown('<div class="section-header"><h2>📝 콘텐츠 입력</h2></div>', unsafe_allow_html=True)
         
         # 1. EDM 기본 설정 (순서 변경: 1번으로)
-        with st.expander("⚙️ 1단계: 기본 설정", expanded=True):
+        with st.expander("## **⚙️ 1단계: 기본 설정**", expanded=True):
             
             edm_type = st.radio("EDM 유형", ["초청형", "소개형"], help="초청형: 행사/세미나 초대, 소개형: 제품/서비스 소개")
             
@@ -3257,11 +3257,10 @@ def main():
                     st.session_state.current_step = 2
         
         # 2. 솔루션 소개 자료 (순서 변경: 2번으로, URL/파일 동시 업로드 지원)
-        with st.expander("📄 2단계: 솔루션 AI분석", expanded=True):
+        with st.expander("## **📄 2단계: 솔루션 AI분석**", expanded=True):
             
             # URL 입력
-            st.markdown("**🌐 웹페이지 URL**")
-            url_input = st.text_input("웹페이지 URL", placeholder="https://www.woongjin.com")
+            url_input = st.text_input("🌐 웹페이지 URL - AI 분석", placeholder="https://www.woongjin.com")
             url_summary = ""
             if url_input and st.button("🔍 URL 분석", key="analyze_url"):
                 with st.spinner("웹페이지 내용을 분석 중..."):
@@ -3277,9 +3276,8 @@ def main():
                 st.markdown(f'<div class="status-success">🌐 <strong>URL 요약</strong><br>{url_summary}</div>', unsafe_allow_html=True)
             
             # 파일 업로드
-            st.markdown("**📁 파일 업로드**")
             uploaded_file = st.file_uploader(
-                "파일 선택", 
+                "📁 파일 업로드 - AI 분석", 
                 type=["pdf", "pptx", "docx", "jpg", "png"],
                 help="PDF, PPTX, DOCX, JPG, PNG 파일을 지원합니다."
             )
@@ -3344,7 +3342,7 @@ def main():
         
         # 3. 솔루션 소개 (순서 변경: 3번으로, 순서 개선)
         if edm_type == "초청형":
-            with st.expander("📅 3단계: 행사 세부 정보", expanded=True):
+            with st.expander("## **📅 3단계: 행사 세부 정보**", expanded=True):
                 
                 invitation_text = st.text_area("초청의 글", 
                                              placeholder="행사 목적, 주요 내용을 작성해주세요")
@@ -3388,7 +3386,7 @@ def main():
                         st.session_state.current_step = 4
         
         else:  # 소개형 - 순서 개선: 제품/서비스 설명 > 주요 기능 > 기대효과
-            with st.expander("🛠️ 3단계: 솔루션 소개 ", expanded=True):
+            with st.expander("## **🛠️ 3단계: 솔루션 소개**", expanded=True):
                 
                 # 4-1. 제품/서비스 설명
                 st.markdown("**📋 제품/서비스 설명**")
@@ -3532,7 +3530,7 @@ def main():
                         st.session_state.current_step = 4
 
         # 4. 디자인 설정 (순서 변경: 4번으로)
-        with st.expander("🎨 4단계: 디자인 설정", expanded=True):
+        with st.expander("## **🎨 4단계: 디자인 설정**", expanded=True):
             
             bg_main_color = st.color_picker("메인 컬러", "#354F9B")
             
@@ -3590,7 +3588,7 @@ def main():
                 st.session_state.current_step = 5
         
         # 5. 로고 설정 (URL 기반)
-        with st.expander("🏷️ 5단계: 로고(CI/BI) 설정", expanded=True):
+        with st.expander("## **🏷️ 5단계: 로고(CI/BI) 설정**", expanded=True):
             
             # 기본 웅진IT 로고 URL 설정
             company_logo_light_url = "https://raw.githubusercontent.com/Gina-cloud/edm-generator/main/woongjinit_logo1.png"  # 어두운 배경용 (밝은 로고)
@@ -3664,7 +3662,7 @@ def main():
                 st.session_state.current_step = 6
         
         # 6. Footer 설정 (새로 추가: 6번으로)
-        with st.expander("📄 6단계: Footer 설정 ", expanded=True):
+        with st.expander("## **📄 6단계: Footer 설정**", expanded=True):
             
             use_custom_footer = st.checkbox("커스텀 Footer 사용", help="체크하면 아래 정보를 사용하고, 체크하지 않으면 기본값을 사용합니다.")
             
