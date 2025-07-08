@@ -3253,7 +3253,8 @@ def main():
             title_suggestion = st.text_input("타이틀 제안 (선택)", 
                                             placeholder="AI가 25자 이내로 최적화합니다")
             
-            target = st.text_input("타겟 고객", "예: IT 관리자, CTO, 제조업 담당자")
+            target = st.text_input("타겟 고객",
+                                            placeholder="예: IT관리자, CTO, 제조업 담당자")
             
             if core:
                 # current_step 업데이트 최적화 (블러 현상 방지)
@@ -3265,7 +3266,7 @@ def main():
             
             # URL 입력
             st.markdown("**🌐 웹페이지 URL**")
-            url_input = st.text_input("웹페이지 URL", placeholder="https://example.com")
+            url_input = st.text_input("웹페이지 URL", placeholder="https://www.woongjin.com")
             url_summary = ""
             if url_input and st.button("🔍 URL 분석", key="analyze_url"):
                 with st.spinner("웹페이지 내용을 분석 중..."):
@@ -3379,7 +3380,7 @@ def main():
                 
                 col_url, col_cta = st.columns(2)
                 with col_url:
-                    event_url = st.text_input("신청 링크", placeholder="https://...")
+                    event_url = st.text_input("신청 링크", placeholder="https://www.woongjin.com/customer/contact.do")
                 with col_cta:
                     cta = st.text_input("버튼 문구", "신청하기")
                 
@@ -3512,7 +3513,7 @@ def main():
                 # 4-3. 기대효과 (주요 기능 다음)
                 st.markdown("**📈 기대효과 (AI 향상 + 주요 기능 다음 배치)**")
                 expected_effects = st.text_area("기대효과 설명", 
-                                              placeholder="예: 재고 관리 효율화\n운영비용 절감\n실시간 모니터링 가능",
+                                              placeholder="예:\n재고 관리 효율화\n운영비용 절감\n실시간 모니터링 가능",
                                               help="AI가 참고자료를 바탕으로 구체적인 설명을 추가합니다.")
                 
                 # 안전한 valid_features 필터링
@@ -3523,7 +3524,7 @@ def main():
                 
                 col_url, col_cta = st.columns(2)
                 with col_url:
-                    product_url = st.text_input("상세 URL", placeholder="https://...")
+                    product_url = st.text_input("상세 URL", placeholder="https://www.woongjin.com/customer/contact.do")
                 with col_cta:
                     cta = st.text_input("버튼 문구", "문의하기")
                 
@@ -3667,7 +3668,7 @@ def main():
                 with col_name:
                     footer_company_name = st.text_input("회사명", value="㈜웅진", placeholder="회사명을 입력하세요")
                 with col_contact:
-                    footer_contact = st.text_input("연락처", value="02-2250-1000", placeholder="전화번호를 입력하세요")
+                    footer_contact = st.text_input("연락처", value="02-2076-4931", placeholder="전화번호를 입력하세요")
                 
                 footer_address = st.text_input("주소", 
                                              value="서울특별시 중구 청계천로24 케이스퀘어시티 7층",
@@ -3766,7 +3767,7 @@ def main():
             st.markdown("#### ⚙️ AI 수정 요청")
             korean_edit_request = st.text_area(
                 "한국어 EDM 수정 요청",
-                placeholder="예시:\n• 제목을 더 임팩트 있게 바꿔주세요\n• 본문을 더 간결하게 만들어주세요\n• CTA 버튼 텍스트를 더 매력적으로 수정해주세요",
+                placeholder="예시:\n• 제목을 더 임팩트 있게 바꿔주세요\n• 본문을 더 간결하게 만들어주세요",
                 height=100,
                 key="korean_edit_request"
             )
