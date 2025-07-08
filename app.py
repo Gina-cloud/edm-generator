@@ -3192,11 +3192,8 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # 디버그 모드 토글 (사이드바)
-    with st.sidebar:
-        st.markdown("### 🔧 개발자 옵션")
-        debug_mode = st.checkbox("디버그 모드", help="로고 선택 및 배경 분석 정보를 표시합니다.")
-        st.session_state.debug_mode = debug_mode
+    # 디버그 모드 기본값 설정 (사용자에게 노출되지 않음)
+    st.session_state.debug_mode = False
     
     # 진행 상황 표시
     # 진행상황 바 제거됨
