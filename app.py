@@ -116,15 +116,12 @@ def initialize_openai_client():
         # 1. Streamlit secrets에서 확인
         try:
             api_key = st.secrets["openai"]["api_key"]
-            st.success("✅ Streamlit secrets에서 API 키를 로드했습니다.")
         except KeyError:
             pass
         
         # 2. 환경변수에서 확인
         if not api_key:
             api_key = os.getenv("OPENAI_API_KEY")
-            if api_key:
-                st.info("ℹ️ 환경변수에서 API 키를 로드했습니다.")
         
         # 3. .env 파일에서 확인
         if not api_key:
@@ -132,8 +129,6 @@ def initialize_openai_client():
                 from dotenv import load_dotenv
                 load_dotenv()
                 api_key = os.getenv("OPENAI_API_KEY")
-                if api_key:
-                    st.info("ℹ️ .env 파일에서 API 키를 로드했습니다.")
             except ImportError:
                 pass
         
@@ -157,7 +152,7 @@ def initialize_openai_client():
                 messages=[{"role": "user", "content": "Hello"}],
                 max_tokens=5
             )
-            st.success("✅ OpenAI GPT-4 모델 연결이 성공적으로 확인되었습니다.")
+
             return client
             
         except Exception as e:
