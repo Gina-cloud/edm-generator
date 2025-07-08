@@ -3237,7 +3237,7 @@ def main():
         st.markdown('<div class="section-header"><h2>📝 콘텐츠 입력</h2></div>', unsafe_allow_html=True)
         
         # 1. EDM 기본 설정 (순서 변경: 1번으로)
-        with st.expander("⚙️ 1단계: EDM 기본 설정", expanded=True):
+        with st.expander("⚙️ 1단계: 기본 설정", expanded=True):
             
             edm_type = st.radio("EDM 유형", ["초청형", "소개형"], help="초청형: 행사/세미나 초대, 소개형: 제품/서비스 소개")
             
@@ -3257,7 +3257,7 @@ def main():
                     st.session_state.current_step = 2
         
         # 2. 솔루션 소개 자료 (순서 변경: 2번으로, URL/파일 동시 업로드 지원)
-        with st.expander("📄 2단계: 솔루션 소개 자료 (개선됨)", expanded=True):
+        with st.expander("📄 2단계: 솔루션 AI분석", expanded=True):
             
             # URL 입력
             st.markdown("**🌐 웹페이지 URL**")
@@ -3388,7 +3388,7 @@ def main():
                         st.session_state.current_step = 4
         
         else:  # 소개형 - 순서 개선: 제품/서비스 설명 > 주요 기능 > 기대효과
-            with st.expander("🛠️ 3단계: 솔루션 소개 (순서 개선)", expanded=True):
+            with st.expander("🛠️ 3단계: 솔루션 소개 ", expanded=True):
                 
                 # 4-1. 제품/서비스 설명
                 st.markdown("**📋 제품/서비스 설명**")
@@ -3590,7 +3590,7 @@ def main():
                 st.session_state.current_step = 5
         
         # 5. 로고 설정 (URL 기반)
-        with st.expander("🏷️ 5단계: 로고 설정", expanded=True):
+        with st.expander("🏷️ 5단계: 로고(CI/BI) 설정", expanded=True):
             
             # 기본 웅진IT 로고 URL 설정
             company_logo_light_url = "https://raw.githubusercontent.com/Gina-cloud/edm-generator/main/woongjinit_logo1.png"  # 어두운 배경용 (밝은 로고)
@@ -3654,7 +3654,7 @@ def main():
                 st.session_state.current_step = 6
         
         # 6. Footer 설정 (새로 추가: 6번으로)
-        with st.expander("📄 6단계: Footer 설정 (새로 추가)", expanded=True):
+        with st.expander("📄 6단계: Footer 설정 ", expanded=True):
             
             use_custom_footer = st.checkbox("커스텀 Footer 사용", help="체크하면 아래 정보를 사용하고, 체크하지 않으면 기본값을 사용합니다.")
             
