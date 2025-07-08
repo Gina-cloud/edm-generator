@@ -993,14 +993,51 @@ def select_logo_by_brightness(theme_color, light_logo, dark_logo):
     except Exception:
         return light_logo if light_logo else dark_logo
 
-def load_image_base64(file_obj):
-    """파일 객체를 base64로 변환"""
-    if file_obj is None:
+def load_image_from_url(url):
+    """URL에서 이미지를 다운로드하고 base64로 변환"""
+    if not url:
         return ""
     
     try:
-        file_obj.seek(0)
-        image = Image.open(file_obj)
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        image = Image.open(io.BytesIO(response.content))
+        
+        max_size = (800, 600)
+        if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
+            image.thumbnail(max_size, Image.Resampling.LANCZOS)
+        
+        if image.mode in ('RGBA', 'LA'):
+            output = io.BytesIO()
+            image.save(output, format='PNG', optimize=True)
+            output.seek(0)
+            return base64.b64encode(output.getvalue()).decode()
+        else:
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            output = io.BytesIO()
+            image.save(output, format='JPEG', quality=85, optimize=True)
+            output.seek(0)
+            return base64.b64encode(output.getvalue()).decode()
+            
+    except Exception as e:
+        print(f"URL 이미지 로드 오류: {str(e)}")
+        return ""
+
+def load_image_base64(file_obj_or_url):
+    """파일 객체 또는 URL을 base64로 변환"""
+    if file_obj_or_url is None:
+        return ""
+    
+    # URL인 경우
+    if isinstance(file_obj_or_url, str) and (file_obj_or_url.startswith('http://') or file_obj_or_url.startswith('https://')):
+        return load_image_from_url(file_obj_or_url)
+    
+    # 파일 객체인 경우
+    try:
+        file_obj_or_url.seek(0)
+        image = Image.open(file_obj_or_url)
         
         max_size = (800, 600)
         if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
@@ -1022,8 +1059,8 @@ def load_image_base64(file_obj):
     except Exception as e:
         print(f"이미지 처리 오류: {str(e)}")
         try:
-            file_obj.seek(0)
-            return base64.b64encode(file_obj.read()).decode()
+            file_obj_or_url.seek(0)
+            return base64.b64encode(file_obj_or_url.read()).decode()
         except:
             return ""
 
@@ -2303,12 +2340,12 @@ def create_improved_html_edm(content, edm_type, company_logo_light, company_logo
                            target_language="ko", material_summary="", footer_info=None):
     """개선된 HTML EDM 생성 (Footer 개선 포함)"""
     
-    # 개선된 배경 분석 기반 로고 선택
-    selected_logo = select_logo_by_background_analysis(
+    # 개선된 배경 분석 기반 로고 선택 (URL 기반)
+    selected_logo_url = select_logo_by_background_analysis(
         theme_color, bg_svg_code, bg_image_path, 
         company_logo_light, company_logo_dark
     )
-    company_logo_b64 = load_image_base64(selected_logo) if selected_logo else ""
+    company_logo_b64 = load_image_base64(selected_logo_url) if selected_logo_url else ""
     partner_logo_b64 = load_image_base64(partner_logo) if partner_logo else ""
 
     # 다국어 번역 적용
@@ -3556,69 +3593,69 @@ def main():
             if st.session_state.current_step < 5:
                 st.session_state.current_step = 5
         
-        # 5. 로고 업로드 (순서 변경: 5번으로)
-        with st.expander("🏷️ 5단계: 로고 업로드 (위치 개선됨)", expanded=True):
+        # 5. 로고 설정 (URL 기반)
+        with st.expander("🏷️ 5단계: 로고 설정", expanded=True):
             
-            company_logo_light = st.file_uploader("회사 로고 (밝은 배경용)", type=["png", "jpg", "jpeg"], 
-                                                 help="밝은 배경에서 사용할 어두운 로고")
-            company_logo_dark = st.file_uploader("회사 로고 (어두운 배경용)", type=["png", "jpg", "jpeg"], 
-                                                help="어두운 배경에서 사용할 밝은 로고")
-            partner_logo = st.file_uploader("솔루션 로고 (선택)", type=["png", "jpg", "jpeg"])
+            # 기본 웅진IT 로고 URL 설정
+            company_logo_light_url = "https://raw.githubusercontent.com/Gina-cloud/edm-generator/main/woongjinit_logo1.png"  # 어두운 배경용 (밝은 로고)
+            company_logo_dark_url = "https://raw.githubusercontent.com/Gina-cloud/edm-generator/main/woongjinit_logo2.png"   # 밝은 배경용 (어두운 로고)
+            
+            st.markdown("**회사 로고 (웅진IT 기본 설정)**")
+            st.info("✅ 웅진IT 로고가 자동으로 설정되어 배경에 따라 최적의 로고가 선택됩니다.")
             
             # 로고 미리보기
-            if company_logo_light or company_logo_dark:
-                st.markdown("**로고 미리보기:**")
-                cols = st.columns(3)
-                if company_logo_light:
-                    with cols[0]:
-                        st.image(company_logo_light, caption="밝은 배경용", width=100)
-                if company_logo_dark:
-                    with cols[1]:
-                        st.image(company_logo_dark, caption="어두운 배경용", width=100)
-                if partner_logo:
-                    with cols[2]:
-                        st.image(partner_logo, caption="솔루션 로고", width=100)
-                
-                # 배경 기반 로고 선택 미리보기
-                if bg_elements or uploaded_bg:
-                    st.markdown("**🎯 배경 기반 로고 선택 미리보기:**")
-                    
-                    # 임시 배경 분석
-                    temp_brightness = 128
-                    if uploaded_bg:
-                        st.info("📸 업로드된 이미지의 명도를 분석하여 최적의 로고를 선택합니다.")
-                    elif bg_elements:
-                        # 선택된 효과 기반 예상 명도
-                        if any("sparkles" in str(e) or "bokeh" in str(e) for e in bg_elements):
-                            temp_brightness = 180  # 밝은 효과
-                            st.info("✨ 밝은 배경 효과 감지 → 어두운 로고가 선택됩니다.")
-                        else:
-                            temp_brightness = 100  # 어두운 효과
-                            st.info("🌙 어두운 배경 효과 감지 → 밝은 로고가 선택됩니다.")
-                    
-                    # 예상 로고 선택 표시
-                    if temp_brightness >= 140:
-                        recommended_logo = company_logo_dark if company_logo_dark else company_logo_light
-                        logo_desc = "어두운 로고 (밝은 배경용)"
-                    else:
-                        recommended_logo = company_logo_light if company_logo_light else company_logo_dark
-                        logo_desc = "밝은 로고 (어두운 배경용)"
-                    
-                    if recommended_logo:
-                        col_preview, col_desc = st.columns([1, 2])
-                        with col_preview:
-                            st.image(recommended_logo, caption="선택될 로고", width=80)
-                        with col_desc:
-                            st.markdown(f"""
-                            **{logo_desc}**  
-                            배경 명도 분석 결과에 따라  
-                            자동으로 선택됩니다.
-                            """)
+            st.markdown("**로고 미리보기:**")
+            cols = st.columns(2)
+            with cols[0]:
+                st.image(company_logo_light_url, caption="밝은 로고 (어두운 배경용)", width=120)
+            with cols[1]:
+                st.image(company_logo_dark_url, caption="어두운 로고 (밝은 배경용)", width=120)
             
-            if company_logo_light or company_logo_dark:
-                # current_step 업데이트 최적화
-                if st.session_state.current_step < 6:
-                    st.session_state.current_step = 6
+            # 솔루션 로고 (선택사항)
+            partner_logo = st.file_uploader("솔루션 로고 (선택)", type=["png", "jpg", "jpeg"])
+            
+            # 배경 기반 로고 선택 미리보기
+            if bg_elements or uploaded_bg:
+                st.markdown("**🎯 배경 기반 로고 선택 미리보기:**")
+                
+                # 임시 배경 분석
+                temp_brightness = 128
+                if uploaded_bg:
+                    st.info("📸 업로드된 이미지의 명도를 분석하여 최적의 로고를 선택합니다.")
+                elif bg_elements:
+                    # 선택된 효과 기반 예상 명도
+                    if any("sparkles" in str(e) or "bokeh" in str(e) for e in bg_elements):
+                        temp_brightness = 180  # 밝은 효과
+                        st.info("✨ 밝은 배경 효과 감지 → 어두운 로고가 선택됩니다.")
+                    else:
+                        temp_brightness = 100  # 어두운 효과
+                        st.info("🌙 어두운 배경 효과 감지 → 밝은 로고가 선택됩니다.")
+                
+                # 예상 로고 선택 표시
+                if temp_brightness >= 140:
+                    recommended_logo_url = company_logo_dark_url
+                    logo_desc = "어두운 로고 (밝은 배경용)"
+                else:
+                    recommended_logo_url = company_logo_light_url
+                    logo_desc = "밝은 로고 (어두운 배경용)"
+                
+                col_preview, col_desc = st.columns([1, 2])
+                with col_preview:
+                    st.image(recommended_logo_url, caption="선택될 로고", width=80)
+                with col_desc:
+                    st.markdown(f"""
+                    **{logo_desc}**  
+                    배경 명도 분석 결과에 따라  
+                    자동으로 선택됩니다.
+                    """)
+            
+            # URL을 변수로 설정
+            company_logo_light = company_logo_light_url
+            company_logo_dark = company_logo_dark_url
+            
+            # current_step 업데이트
+            if st.session_state.current_step < 6:
+                st.session_state.current_step = 6
         
         # 6. Footer 설정 (새로 추가: 6번으로)
         with st.expander("📄 6단계: Footer 설정 (새로 추가)", expanded=True):
@@ -3820,7 +3857,7 @@ def main():
                                 st.session_state.get('partner_logo'),
                                 st.session_state.get('cta_url', '#'),
                                 st.session_state.get('sessions'),
-                                st.session_state.get('bg_main_color', '#667eea'),
+                                st.session_state.get('bg_main_color', "#002df4"),
                                 st.session_state.get('bg_image_path'),
                                 st.session_state.get('event_info_dict'),
                                 st.session_state.get('features_data'),
