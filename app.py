@@ -3710,7 +3710,7 @@ def main():
                     <div>
                         <h3 style="margin: 0; font-size: 1.2em;">🚀 AI가 EDM을 생성하고 있습니다</h3>
                         <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9em;">
-                            고품질 EDM을 위해 AI가 열심히 작업 중입니다. 잠시만 기다려주세요.
+                            개발자 없는 Camper, AI와 함께하다. 기다림 끝에 작품을 만나세요.
                         </p>
                     </div>
                 </div>
